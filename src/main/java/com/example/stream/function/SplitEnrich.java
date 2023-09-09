@@ -19,7 +19,6 @@ public class SplitEnrich implements Function<KStream<String, PullRequest>, KStre
     private final FakeRepository repository;
     private final List<String> enrichments = List.of("JIRA", "BUILD", "SONAR");
 
-
     private List<EnrichStart> convert(PullRequest value) {
         return enrichments.stream().map(
                 enrichments -> {

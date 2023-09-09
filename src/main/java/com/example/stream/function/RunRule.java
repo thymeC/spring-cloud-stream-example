@@ -2,6 +2,7 @@ package com.example.stream.function;
 
 import com.example.stream.FakeRepository;
 import com.example.stream.model.EnrichEnd;
+import com.example.stream.model.EnrichStart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class RunRule implements Consumer<EnrichEnd> {
 
-    public static final String BINDING_NAME = "runRule-in-0";
     private final FakeRepository repository;
 
     @Override

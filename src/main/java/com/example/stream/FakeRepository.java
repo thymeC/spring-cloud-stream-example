@@ -1,6 +1,7 @@
 package com.example.stream;
 
 import com.example.stream.model.EnrichEnd;
+import com.example.stream.model.EnrichStart;
 import com.example.stream.model.PullRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

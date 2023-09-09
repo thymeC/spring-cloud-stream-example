@@ -2,43 +2,59 @@ package com.example.stream.function;
 
 import com.example.stream.FakeApi;
 import com.example.stream.FakeRepository;
+import com.example.stream.model.AbstractMessage;
 import com.example.stream.model.EnrichEnd;
 import com.example.stream.model.EnrichStart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.stream.function.StreamBridge;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.kstream.Branched;
+import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FetchEnrich implements Consumer<EnrichStart> {
+public class FetchEnrich implements Function<KStream<String, EnrichStart>, KStream<String, ? extends AbstractMessage>[]> {
 
-    public static final String BINDING_NAME = "fetchEnrich-in-0";
-
-    private final StreamBridge bridge;
     private final FakeRepository repository;
     private final FakeApi api;
 
-    @Override
-    public void accept(EnrichStart enrichStart) {
+    private boolean randomPass() {
         var random = new Random();
-        api.fetch(enrichStart);
+        return random.nextInt(10) < random.nextInt(15);
+    }
 
-        if (random.nextInt(10) < random.nextInt(15)) {
-            var enrichEnd = new EnrichEnd();
-            enrichEnd.setId(enrichStart.getId());
-            enrichEnd.setType(enrichStart.getType());
-            enrichEnd.generateKey();
-            repository.save(enrichEnd);
-            bridge.send(RunRule.BINDING_NAME, enrichEnd);
-        } else {
-            log.info("Enrichment {} for {} failed", enrichStart.getType(), enrichStart.getId());
-            bridge.send(FetchEnrich.BINDING_NAME, enrichStart);
-        }
+    private EnrichEnd convert(EnrichStart start) {
+        var enrichEnd = new EnrichEnd();
+        enrichEnd.setId(start.getId());
+        enrichEnd.setType(start.getType());
+        enrichEnd.generateKey();
+        return enrichEnd;
+    }
+
+    @Override
+    public KStream<String, ? extends AbstractMessage>[] apply(KStream<String, EnrichStart> input) {
+        var map = input.split()
+                .branch((key, value) -> randomPass(), Branched.as("success"))
+                .defaultBranch(Branched.as("failure"));
+
+        var success = map.get("success").map((k, v) -> {
+            api.fetch(v);
+            var end = convert(v);
+            repository.save(end);
+            return new KeyValue<>(end.getKey(), end);
+        });
+
+        var failed = map.get("failure").map((k, v) -> {
+            log.info("Enrichment {} for {} failed", v.getType(), v.getId());
+            return new KeyValue<>(v.getKey(), v);
+        });
+
+        return new KStream[]{success, failed};
     }
 
 }
