@@ -1,6 +1,6 @@
 package com.example.stream;
 
-import com.example.stream.model.Ro;
+import com.example.stream.model.EnrichStart;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FakeApi {
 
-    public void fetch(Ro ro) {
-        log.info("Fetching {} for {}", ro.getType(), ro.getId());
+    public void fetch(EnrichStart enrichStart) {
+        log.info("Fetching {} for {}", enrichStart.getType(), enrichStart.getId());
     }
 }

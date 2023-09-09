@@ -5,11 +5,12 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Fus extends AbstractMessage{
+public class EnrichEnd extends AbstractMessage {
     private String id;
+    private String type;
 
     @Override
     public void generateKey() {
-        setKey("Fus-%s".formatted(getId()));
+        setKey("EnrichEnd-%s-%s".formatted(getId(), getType()));
     }
 }

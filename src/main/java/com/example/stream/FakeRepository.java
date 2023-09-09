@@ -1,7 +1,7 @@
 package com.example.stream;
 
-import com.example.stream.model.Dah;
-import com.example.stream.model.Ro;
+import com.example.stream.model.EnrichEnd;
+import com.example.stream.model.PullRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -9,17 +9,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class FakeRepository {
 
-    public Ro findRo(String id) {
-        log.info("finding ro");
-        return new Ro();
+    public void findPullRequest(PullRequest pullRequest) {
+        log.info("found pullRequest {}", pullRequest.getKey());
     }
 
-    public Dah findDah(String id) {
-        log.info("finding dah");
-        return new Dah();
+    public void findEnrichEnd(EnrichEnd enrichEnd) {
+        log.info("found enrichEnd {}", enrichEnd.getKey());
     }
 
-    public void save(Dah dah) {
-        log.info("dah has been saved");
+    public void save(EnrichEnd enrichEnd) {
+        log.info("{} has been saved", enrichEnd.getKey());
     }
 }

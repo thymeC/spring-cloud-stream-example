@@ -5,12 +5,11 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Ro extends AbstractMessage {
+public class PullRequest extends AbstractMessage{
     private String id;
-    private String type;
 
     @Override
     public void generateKey() {
-        setKey("Ro-%s-%s".formatted(getId(), getType()));
+        setKey("PullRequest-%s".formatted(getId()));
     }
 }
