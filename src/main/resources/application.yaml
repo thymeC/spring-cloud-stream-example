@@ -1,15 +1,18 @@
 spring:
   cloud:
+    function:
+      definition: splitEnrich;fetchEnrich;runRule
     stream:
       bindings:
-        fusFunction:
+        splitEnrich-in-0:
+          destination: topic-raw
+          group: group-raw
+        fetchEnrich-in-0:
           destination: topic-enrich
-          group: fus-group-id
-        roFunction:
-          destination: topic-deliver
-          group: ro-group-id
-        dahFunction:
-          group: dah-group-id
+          group: group-enrich
+        runRule-in-0:
+          destination: topic-rule
+          group: group-rule
       binders:
         kafka:
           type: kafka

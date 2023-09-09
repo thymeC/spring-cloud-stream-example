@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class RunRule implements Consumer<EnrichEnd> {
 
+    public static final String BINDING_NAME = "runRule-in-0";
     private final FakeRepository repository;
 
     @Override

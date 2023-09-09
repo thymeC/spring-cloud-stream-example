@@ -5,15 +5,19 @@ import com.example.stream.FakeRepository;
 import com.example.stream.model.EnrichEnd;
 import com.example.stream.model.EnrichStart;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.function.Consumer;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FetchEnrich implements Consumer<EnrichStart> {
+
+    public static final String BINDING_NAME = "fetchEnrich-in-0";
 
     private final StreamBridge bridge;
     private final FakeRepository repository;
@@ -30,9 +34,10 @@ public class FetchEnrich implements Consumer<EnrichStart> {
             enrichEnd.setType(enrichStart.getType());
             enrichEnd.generateKey();
             repository.save(enrichEnd);
-            bridge.send("enrichEnd", enrichEnd);
+            bridge.send(RunRule.BINDING_NAME, enrichEnd);
         } else {
-            bridge.send("enrichStart", enrichStart);
+            log.info("Enrichment {} for {} failed", enrichStart.getType(), enrichStart.getId());
+            bridge.send(FetchEnrich.BINDING_NAME, enrichStart);
         }
     }
 

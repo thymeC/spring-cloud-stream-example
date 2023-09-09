@@ -27,7 +27,7 @@ public class SplitEnrich implements Consumer<PullRequest> {
             ro.setType(enrichment);
             ro.setId(pullRequest.getId());
             ro.generateKey();
-            bridge.send("roTask", ro);
+            bridge.send(FetchEnrich.BINDING_NAME, ro);
         }
     }
 }
