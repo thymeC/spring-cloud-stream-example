@@ -2,19 +2,19 @@
 
 ```mermaid
 flowchart LR
-    start --> tr[[Topic-Raw]]
-    tr --> FusFunction
-    FusFunction --> t1[[Topic-Enrich]]
-    FusFunction --> t1
-    FusFunction --> t1
-    t1 --> RoFunction
-    RoFunction --> ExternalSystem
-    RoFunction --> t2[[Topic-Deliver]]
-    t2 --> DahFunction
-    FusFunction <--> MongoDB
-    RoFunction <--> MongoDB
-    DahFunction <--> MongoDB
-    DahFunction --> End
+    start --> tr[[topic-raw]]
+    tr --> SplitEnrich
+    SplitEnrich --> te[[topic-enrich]]
+    SplitEnrich --> te
+    SplitEnrich --> te
+    te --> FetchEnrich
+    FetchEnrich --> ExternalSystem
+    FetchEnrich --> t2[[topic-deliver]]
+    t2 --> RunRule
+    SplitEnrich <--> MongoDB
+    FetchEnrich <--> MongoDB
+    RunRule <--> MongoDB
+    RunRule --> End
 ```
 
 ```bash
