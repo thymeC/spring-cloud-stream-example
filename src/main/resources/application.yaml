@@ -7,20 +7,13 @@ spring:
         splitEnrich-in-0:
           destination: topic-raw
           group: group-raw
+        splitEnrich-out-0:
+          destination: topic-enrich
+          group: group-raw
         fetchEnrich-in-0:
           destination: topic-enrich
           group: group-enrich
         runRule-in-0:
           destination: topic-rule
           group: group-rule
-      binders:
-        kafka:
-          type: kafka
-          environment:
-            spring:
-              cloud:
-                stream:
-                  kafka:
-                    binder:
-                      brokers: localhost:9092
 
