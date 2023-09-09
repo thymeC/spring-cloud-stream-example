@@ -1,17 +1,23 @@
 spring:
-  kafka:
-    consumer:
-      bootstrap-servers: 127.0.0.1:9092
-      client-id: stream-sink
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: stream-sink
-    bootstrap-servers: 127.0.0.1:9092
   cloud:
     stream:
       bindings:
-        input:
-          destination: stream-source
-          group: stream-sink
-          consumer:
-            useNativeDecoding: true
+        fusFunction:
+          destination: topic-enrich
+          group: fus-group-id
+        roFunction:
+          destination: topic-deliver
+          group: ro-group-id
+        dahFunction:
+          group: dah-group-id
+      binders:
+        kafka:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: localhost:9092
+

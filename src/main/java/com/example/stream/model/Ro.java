@@ -1,8 +1,16 @@
 package com.example.stream.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class Ro {
+@EqualsAndHashCode(callSuper = true)
+public class Ro extends AbstractMessage {
     private String id;
+    private String type;
+
+    @Override
+    public void generateKey() {
+        setKey("Ro-%s-%s".formatted(getId(), getType()));
+    }
 }
