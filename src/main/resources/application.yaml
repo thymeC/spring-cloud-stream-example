@@ -3,23 +3,28 @@ spring:
     function:
       definition: splitEnrich;fetchEnrich;runRule
     stream:
+      kafka.streams.binder.configuration:
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       bindings:
         splitEnrich-in-0:
           destination: topic-raw
-          group: group-raw
+          group: group-raw-read
         splitEnrich-out-0:
           destination: topic-enrich
-          group: group-raw
+          group: group-raw-write
+
         fetchEnrich-in-0:
           destination: topic-enrich
-          group: group-enrich
+          group: group-enrich-read
         fetchEnrich-out-0:
           destination: topic-rule
-          group: group-enrich
+          group: group-enrich-write
         fetchEnrich-out-1:
           destination: topic-enrich
-          group: group-enrich
+          group: group-enrich-back
+
         runRule-in-0:
           destination: topic-rule
-          group: group-rule
+          group: group-rule-read
 
